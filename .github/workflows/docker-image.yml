@@ -15,6 +15,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 增加：设置 Docker Buildx (支持多架构构建和更高级的缓存)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -27,8 +31,15 @@ jobs:
         with:
           context: .
           push: true
-          # 建议镜像名也改成 zvps，保持一致
+          # 明确指定平台为 linux/amd64，防止在某些 Runner 上构建出 ARM 镜像
+          platforms: linux/amd64
           tags: ghcr.io/${{ github.repository_owner }}/zvps:latest
+          # 增加：启用 GitHub Actions 缓存，加速后续构建
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      # --- 下面是可选的“自动通知更新”步骤 (如果你配置了 CF_API) ---
-      # 如果你不想手动 restage，可以研究添加 CF CLI 的 Action
+      # 关于“自动通知更新”：
+      # Northflank 实际上支持 "Image Pull Secret" 和 "Auto-deploy"。
+      # 只要你在 Northflank 面板里开启了 "Continuous Deployment"，
+      # 当它检测到 GHCR 上的 :latest 标签更新时，会自动拉取并重启。
+      # 所以你不需要在这里写复杂的 CF CLI 或 Northflank API。
