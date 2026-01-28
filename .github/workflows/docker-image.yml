@@ -34,6 +34,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ghcr.io/${{ github.repository_owner }}/zvps:latest
+          # 修改下面这一行，把 zvps 换成 vps-wg-gt
+          tags: ghcr.io/${{ github.repository_owner }}/vps-wg-gt:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
