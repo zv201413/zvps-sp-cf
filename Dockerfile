@@ -2,7 +2,7 @@ FROM ghcr.io/vevc/ubuntu:25.11.15
 
 USER root
 
-# 1. 安装基础工具
+# 1-1. 安装基础工具
 RUN apt-get update && apt-get install -y \
     supervisor procps wget curl passwd sudo openssh-server net-tools && \
     rm -rf /var/lib/apt/lists/*
@@ -18,7 +18,7 @@ RUN wget --tries=3 https://github.com/ginuerzh/gost/releases/download/v2.12.0/go
     chmod +x /usr/local/bin/gost && \
     rm gost_2.12.0_linux_amd64.tar.gz
 
-# 4. 安装 WARP-GO v1.0.8 (处理 .tar.gz 格式)
+# 1-4. 安装 WARP-GO v1.0.8 (处理 .tar.gz 格式)
 RUN wget --tries=3 https://github.com/Fangliding/warp-go/releases/download/v1.0.8/warp-go_1.0.8_linux_amd64.tar.gz && \
     tar -xvf warp-go_1.0.8_linux_amd64.tar.gz && \
     mv warp-go /usr/local/bin/warp-go && \
